@@ -11,12 +11,13 @@ services:
     tty: true
   mysql:
     image: mysql
+    restart: always
     platform: linux/amd64
     volumes:
       - mysql_volume:/var/lib/mysql
     environment:
+      MYSQL_DATABASE: concrete
       MYSQL_ROOT_PASSWORD: password
-      TZ: "Asia/Tokyo"
     ports:
       - "3306:3306"
 volumes:

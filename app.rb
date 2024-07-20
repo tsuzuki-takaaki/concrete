@@ -6,7 +6,8 @@ set :bind, '0.0.0.0'
 mysql_client = Mysql2::Client.new(
   :host => "mysql",
   :username => "root",
-  :password => "password"
+  :password => "password",
+  :database => "concrete"
 )
 
 get '/' do
