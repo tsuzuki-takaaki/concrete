@@ -1,2 +1,4 @@
-ruby 3.3.0 (2023-12-25 revision 5124f9ac75) [arm64-darwin23]
-
+```sh
+$ docker build --platform linux/amd64 -t concrete .
+$ docker run --platform linux/amd64 -p 4567:4567 --rm -it --name concrete concrete
+```
