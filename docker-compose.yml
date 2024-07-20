@@ -1,0 +1,10 @@
+services:
+  sinatra:
+    build: .
+    platform: linux/amd64
+    volumes:
+      - gem_volume:/usr/local/bundle
+    ports:
+      - 4567:4567
+volumes:
+  gem_volume:
