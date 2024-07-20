@@ -1,5 +1,13 @@
+require "mysql2"
 require "sinatra"
 set :bind, '0.0.0.0'
+
+# TODO: Use env
+mysql_client = Mysql2::Client.new(
+  :host => "mysql",
+  :username => "root",
+  :password => "password"
+)
 
 get '/' do
   return "Hello world!\n"
