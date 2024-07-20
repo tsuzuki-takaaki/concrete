@@ -2,6 +2,11 @@ services:
   sinatra:
     build: .
     platform: linux/amd64
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: concrete
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
     depends_on:
       - mysql
     volumes:
