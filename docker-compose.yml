@@ -2,9 +2,23 @@ services:
   sinatra:
     build: .
     platform: linux/amd64
+    depends_on:
+      - mysql
     volumes:
       - gem_volume:/usr/local/bundle
     ports:
       - 4567:4567
+    tty: true
+  mysql:
+    image: mysql
+    platform: linux/amd64
+    volumes:
+      - mysql_volume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3306:3306"
 volumes:
   gem_volume:
+  mysql_volume:
