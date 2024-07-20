@@ -1,5 +1,14 @@
 require "sinatra"
 
 get '/' do
-  "Hello world!\n"
+  return "Hello world!\n"
+end
+
+get '/mysql/users' do
+end
+
+get '/postgre/users' do
+end
+
+get '/sqlite/users' do
 end
