@@ -5,7 +5,7 @@ services:
     environment:
       MYSQL_HOST: mysql
       MYSQL_DATABASE: concrete
-      MYSQL_USER: root
+      MYSQL_USER: concrete
       MYSQL_PASSWORD: password
     depends_on:
       - mysql
@@ -21,8 +21,10 @@ services:
     volumes:
       - mysql_volume:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: concrete
       MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: concrete
+      MYSQL_USER: concrete
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
 volumes:
