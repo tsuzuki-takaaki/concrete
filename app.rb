@@ -23,6 +23,16 @@ get '/mysql/initialize' do
 end
 
 get '/mysql/show-databases' do
+  #  mysql> show databases;
+  #  +--------------------+
+  #  | Database           |
+  #  +--------------------+
+  #  | concrete           |
+  #  | information_schema |
+  #  | performance_schema |
+  #  +--------------------+
+  #  3 rows in set (0.01 sec)
+
   # result: Mysql2::Result
   # to_a -> [{"Database"=>"DATABASE_NAME"}, ...]
   result = mysql_client.query("SHOW DATABASES;")
