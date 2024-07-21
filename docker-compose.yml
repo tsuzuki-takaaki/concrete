@@ -14,7 +14,7 @@ services:
       - ./sql:/app/sql
     ports:
       - 4567:4567
-    tty: true
+    tty: true # No need if you finish check with bash
   mysql:
     image: mysql
     restart: always
