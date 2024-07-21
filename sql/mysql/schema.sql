@@ -12,7 +12,7 @@ CREATE TABLE `user` (
 DROP TABLE IF EXISTS `post`;
 CREATE TABLE `post` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `tittle` VARCHAR(255) NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
   `content` TEXT NOT NULL,
   `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),

@@ -12,7 +12,7 @@ INSERT INTO `user` (`name`, `email`) VALUES
 ('Ivy Clark', 'ivy@example.com'),
 ('Jack White', 'jack@example.com');
 
-INSERT INTO `post` (`tittle`, `content`, `user_id`) VALUES
+INSERT INTO `post` (`title`, `content`, `user_id`) VALUES
 ('First Post', 'This is the content of the first post.', 1),
 ('Second Post', 'This is the content of the second post.', 2),
 ('Third Post', 'This is the content of the third post.', 3),

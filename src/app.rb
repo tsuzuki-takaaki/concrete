@@ -47,6 +47,11 @@ get '/mysql/users' do
   json result.to_a
 end
 
+get '/mysql/posts' do
+  result = mysql_client.query("SELECT * FROM post;")
+  json result.to_a
+end
+
 # ---------- postgresql ----------
 get '/postgre/users' do
 end

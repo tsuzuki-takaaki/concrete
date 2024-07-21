@@ -79,6 +79,25 @@ def select_users
   puts "As collection array: #{result.to_a}"
 end
 
+# ---------- select post
+# mysql> select * from post;
+# +----+------------------+----------------------------------------------+---------+
+# | id | title            | content                                      | user_id |
+# +----+------------------+----------------------------------------------+---------+
+# |  1 | First Post       | This is the content of the first post.       |       1 |
+# |  2 | Second Post      | This is the content of the second post.      |       2 |
+# ...
+PostRow = Struct.new(:id, :title, :content, :user_id, keyword_init: true)
+def select_posts
+  result = client.query("SELECT * FROM post;")
+  result.each do |row|
+    post = PostRow.new(row)
+    puts "As custom struct: #{post}"
+  end
+  puts "As collection array: #{result.to_a}"
+end
+
 mysql_initialize
-show_databases
-select_users
+# show_databases
+# select_users
+# select_posts
