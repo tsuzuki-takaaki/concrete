@@ -8,8 +8,8 @@ RUN apt update -y && apt install -y \
 
 WORKDIR /app
 COPY /Gemfile ./Gemfile
-COPY /app.rb ./app.rb
-
 RUN bundle install
+
+COPY /app.rb ./app.rb
 
 CMD ["bash"]
