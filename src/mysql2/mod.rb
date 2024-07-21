@@ -40,7 +40,7 @@ def mysql_initialize
   return nil
 end
 
-# ---------- show databases;
+# ---------- SHOW databases;
 #  mysql> show databases;
 #  +--------------------+
 #  | Database           |
@@ -62,7 +62,7 @@ def show_databases
   puts "As collection array: #{result.to_a}"
 end
 
-# ---------- select * from user;
+# ---------- SELECT * FROM user;
 # mysql> select * from user;
 # +----+---------------+---------------------+
 # | id | name          | email               |
@@ -81,7 +81,7 @@ def select_users
   puts "As collection array: #{result.to_a}"
 end
 
-# ---------- select * from post;
+# ---------- SELECT * FROM post;
 # mysql> select * from post;
 # +----+------------------+----------------------------------------------+---------+
 # | id | title            | content                                      | user_id |
@@ -100,7 +100,7 @@ def select_posts
   puts "As collection array: #{result.to_a}"
 end
 
-# ---------- select * from user u join post p on p.user_id = u.id;
+# ---------- SELECT * FROM user u JOIN post p ON p.user_id = u.id;
 # mysql> select * from user u join post p on p.user_id = u.id;
 # +----+---------------+---------------------+----+------------------+----------------------------------------------+---------+
 # | id | name          | email               | id | title            | content                                      | user_id |
@@ -132,6 +132,28 @@ def select_user_post_not_aster
   result.each do |row|
     user_post_not_aster = UserPostNotAsterRow.new(row)
     puts "As custom struct: #{user_post_not_aster}"
+  end
+  puts "As collection array: #{result.to_a}"
+end
+
+# ---------- SELECT * FROM post p JOIN user u ON p.user_id = u.id;
+# mysql> select * from post p join user u on p.user_id = u.id;
+# +----+------------------+----------------------------------------------+---------+----+---------------+---------------------+
+# | id | title            | content                                      | user_id | id | name          | email               |
+# +----+------------------+----------------------------------------------+---------+----+---------------+---------------------+
+# |  1 | First Post       | This is the content of the first post.       |       1 |  1 | Alice Johnson | alice@example.com   |
+# | 11 | Eleventh Post    | This is the content of the eleventh post.    |       1 |  1 | Alice Johnson | alice@example.com   |
+# |  2 | Second Post      | This is the content of the second post.      |       2 |  2 | Bob Smith     | bob@example.com     |
+# ...
+PostUserRow = Struct.new(:id, :title, :content, :user_id, :name, :email, keyword_init: true)
+def select_post_user
+  result = client.query("SELECT * FROM post p JOIN user u ON p.user_id = u.id;")
+
+  result.each do |row|
+    # See join table columns(Not include user.id if you select *)
+    # @row: {"id"=>?, "title"=>?, "content"=>?, "user_id"=>?, "name"=>?, "email"=>?}
+    post_user = PostUserRow.new(row)
+    puts "As custom struct: #{post_user}"
   end
   puts "As collection array: #{result.to_a}"
 end
@@ -196,4 +218,4 @@ mysql_initialize
 # show_databases
 # select_users
 # select_posts
-select_user_post_not_aster
+select_post_user

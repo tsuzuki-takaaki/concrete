@@ -64,6 +64,13 @@ get '/mysql/user_post_not_aster' do
   json result.to_a
 end
 
+get '/mysql/post_user' do
+  # Not include user.id if you select * from JOIN TABLE
+  # Because conflict with post.id(If you want include you can use AS statement)
+  result = mysql_client.query("SELECT * FROM post p JOIN user u ON u.id = p.user_id;")
+  json result.to_a
+end
+
 # ---------- postgresql ----------
 get '/postgre/users' do
 end
