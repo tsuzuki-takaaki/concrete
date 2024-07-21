@@ -59,6 +59,11 @@ get '/mysql/user_post' do
   json result.to_a
 end
 
+get '/mysql/user_post_not_aster' do
+  result = mysql_client.query("SELECT u.id, u.name, p.id AS post_id, p.title FROM user u JOIN post p ON u.id = p.user_id;")
+  json result.to_a
+end
+
 # ---------- postgresql ----------
 get '/postgre/users' do
 end
