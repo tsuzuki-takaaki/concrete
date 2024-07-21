@@ -13,6 +13,7 @@ services:
     volumes:
       - gem_volume:/usr/local/bundle
       - ./sql:/app/sql
+      - ./src:/app/src
     ports:
       - 4567:4567
   mysql:

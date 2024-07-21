@@ -7,9 +7,9 @@ RUN apt update -y && apt install -y \
     default-mysql-client
 
 WORKDIR /app
-COPY /Gemfile ./Gemfile
+COPY /Gemfile /app/Gemfile
 RUN bundle install
 
-COPY /app.rb ./app.rb
+COPY /src /app/src
 
-CMD ["ruby", "app.rb"]
+CMD ["ruby", "/app/src/app.rb"]
