@@ -22,13 +22,19 @@ end
 
 # ---------- mysql ----------
 MYSQL_SCHEMA_FILE_PATH = File.expand_path("../../sql/mysql/schema.sql", __FILE__)
+MYSQL_SEED_FILE_PATH = File.expand_path("../../sql/mysql/seed.sql", __FILE__)
 
 post '/mysql/initialize' do
   out, status = Open3.capture2("mysql -u#{MYSQL_USER} -p#{MYSQL_PASSWORD} -h#{MYSQL_HOST} #{MYSQL_DATABASE} < #{MYSQL_SCHEMA_FILE_PATH}")
   unless status.success?
-    "Failed to initialize"
+    return "Failed to initialize"
   end
-  nil
+
+  out, status = Open3.capture2("mysql -u#{MYSQL_USER} -p#{MYSQL_PASSWORD} -h#{MYSQL_HOST} #{MYSQL_DATABASE} < #{MYSQL_SEED_FILE_PATH }")
+  unless status.success?
+    return "Failed to seed"
+  end
+  return nil
 end
 
 get '/mysql/show-databases' do
