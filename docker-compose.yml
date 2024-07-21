@@ -11,6 +11,7 @@ services:
       - mysql
     volumes:
       - gem_volume:/usr/local/bundle
+      - ./sql:/app/sql
     ports:
       - 4567:4567
     tty: true
