@@ -81,6 +81,14 @@ def select_users
   puts "As collection array: #{result.to_a}"
 end
 
+def select_a_user(id:)
+  prepared_statement = client.prepare("SELECT * FROM user where id = ?;")
+  result = prepared_statement.execute(id).first
+  user = UserRow.new(result)
+  puts "As custom struct: #{user}"
+  puts "First element of result: #{result}"
+end
+
 # ---------- SELECT * FROM post;
 # mysql> select * from post;
 # +----+------------------+----------------------------------------------+---------+
@@ -218,4 +226,5 @@ mysql_initialize
 # show_databases
 # select_users
 # select_posts
-select_post_user
+# select_post_user
+select_a_user(id: 2)

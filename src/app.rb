@@ -47,6 +47,14 @@ get '/mysql/users' do
   json result.to_a
 end
 
+get '/mysql/user/:id' do
+  id = params[:id]
+
+  prepared_statement = mysql_client.prepare("SELECT * FROM user where id = ?;")
+  result = prepared_statement.execute(id).first
+  json result
+end
+
 get '/mysql/posts' do
   result = mysql_client.query("SELECT * FROM post;")
   json result.to_a
