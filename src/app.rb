@@ -43,10 +43,14 @@ get '/mysql/show-databases' do
 end
 
 get '/mysql/users' do
+  result = mysql_client.query("SELECT * FROM user;")
+  json result.to_a
 end
 
+# ---------- postgresql ----------
 get '/postgre/users' do
 end
 
+# ---------- sqlite ----------
 get '/sqlite/users' do
 end

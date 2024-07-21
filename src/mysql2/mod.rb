@@ -41,7 +41,6 @@ def mysql_initialize
 end
 
 # ---------- show databases
-#  SHOW DATABASES;
 #  mysql> show databases;
 #  +--------------------+
 #  | Database           |
@@ -57,10 +56,29 @@ def show_databases
   result = client.query("SHOW DATABASES;")
   result.each do |row|
     sdb = ShowDatabaseRow.new(row)
-    puts sdb
+    puts "As custom struct: #{sdb}"
   end
-  puts result.to_a
+  puts "As collection array: #{result.to_a}"
+end
+
+# ---------- select user
+# mysql> select * from user;
+# +----+---------------+---------------------+
+# | id | name          | email               |
+# +----+---------------+---------------------+
+# |  1 | Alice Johnson | alice@example.com   |
+# |  2 | Bob Smith     | bob@example.com     |
+# ...
+UserRow = Struct.new(:id, :name, :email, keyword_init: true)
+def select_users
+  result = client.query("SELECT * FROM user;")
+  result.each do |row|
+    user = UserRow.new(row)
+    puts "As custom struct: #{user}"
+  end
+  puts "As collection array: #{result.to_a}"
 end
 
 mysql_initialize
 show_databases
+select_users
