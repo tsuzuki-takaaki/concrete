@@ -1,5 +1,6 @@
 require "mysql2"
 require "sinatra"
+require "sinatra/json"
 set :bind, '0.0.0.0'
 
 mysql_client = Mysql2::Client.new(
@@ -11,6 +12,21 @@ mysql_client = Mysql2::Client.new(
 
 get '/' do
   return "Hello world!\n"
+end
+
+# ---------- mysql ----------
+# Mysql2::Result(returned from issuing a #query on the connection. It includes Enumerable.)
+# Not Collection but Iterator
+
+# TODO: post
+get '/mysql/initialize' do
+end
+
+get '/mysql/show-databases' do
+  # result: Mysql2::Result
+  # to_a -> [{"Database"=>"DATABASE_NAME"}, ...]
+  result = mysql_client.query("SHOW DATABASES;")
+  json result.to_a
 end
 
 get '/mysql/users' do
