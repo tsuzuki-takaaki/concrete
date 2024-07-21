@@ -40,7 +40,7 @@ def mysql_initialize
   return nil
 end
 
-# ---------- show databases
+# ---------- show databases;
 #  mysql> show databases;
 #  +--------------------+
 #  | Database           |
@@ -54,6 +54,7 @@ ShowDatabaseRow = Struct.new(:Database, keyword_init: true)
 def show_databases
   # @Mysql2::Result
   result = client.query("SHOW DATABASES;")
+
   result.each do |row|
     sdb = ShowDatabaseRow.new(row)
     puts "As custom struct: #{sdb}"
@@ -61,7 +62,7 @@ def show_databases
   puts "As collection array: #{result.to_a}"
 end
 
-# ---------- select user
+# ---------- select * from user;
 # mysql> select * from user;
 # +----+---------------+---------------------+
 # | id | name          | email               |
@@ -72,6 +73,7 @@ end
 UserRow = Struct.new(:id, :name, :email, keyword_init: true)
 def select_users
   result = client.query("SELECT * FROM user;")
+
   result.each do |row|
     user = UserRow.new(row)
     puts "As custom struct: #{user}"
@@ -79,7 +81,7 @@ def select_users
   puts "As collection array: #{result.to_a}"
 end
 
-# ---------- select post
+# ---------- select * from post;
 # mysql> select * from post;
 # +----+------------------+----------------------------------------------+---------+
 # | id | title            | content                                      | user_id |
@@ -90,6 +92,7 @@ end
 PostRow = Struct.new(:id, :title, :content, :user_id, keyword_init: true)
 def select_posts
   result = client.query("SELECT * FROM post;")
+
   result.each do |row|
     post = PostRow.new(row)
     puts "As custom struct: #{post}"
@@ -97,7 +100,87 @@ def select_posts
   puts "As collection array: #{result.to_a}"
 end
 
+# ---------- select * from user u join post p on p.user_id = u.id;
+# mysql> select * from user u join post p on p.user_id = u.id;
+# +----+---------------+---------------------+----+------------------+----------------------------------------------+---------+
+# | id | name          | email               | id | title            | content                                      | user_id |
+# +----+---------------+---------------------+----+------------------+----------------------------------------------+---------+
+# |  1 | Alice Johnson | alice@example.com   |  1 | First Post       | This is the content of the first post.       |       1 |
+# |  1 | Alice Johnson | alice@example.com   | 11 | Eleventh Post    | This is the content of the eleventh post.    |       1 |
+# |  2 | Bob Smith     | bob@example.com     |  2 | Second Post      | This is the content of the second post.      |       2 |
+# |  2 | Bob Smith     | bob@example.com     | 12 | Twelfth Post     | This is the content of the twelfth post.     |       2 |
+# ...
+UserPostRow = Struct.new(:id, :name, :email, :title, :content, :user_id, keyword_init: true)
+def select_user_post
+  result = client.query("SELECT * FROM user u join post p on u.id = p.user_id")
+
+  result.each do |row|
+    # See join table columns(Not include post.id if you select *)
+    # @row: {"id"=>?, "name"=>?, "email"=>?, "title"=>?, "content"=>?, "user_id"=>?}
+    user_post = UserPostRow.new(row)
+    puts "As custom struct: #{user_post}"
+  end
+  puts "As collection array: #{result.to_a}"
+end
+
+# ---------- COLUMN(Order is not guaranteed) ----------
+# mysql> select * from user u join post p on p.user_id = u.id;
+# +----+---------------+---------------------+----+------------------+----------------------------------------------+---------+
+# | id | name          | email               | id | title            | content                                      | user_id |
+# +----+---------------+---------------------+----+------------------+----------------------------------------------+---------+
+# |  1 | Alice Johnson | alice@example.com   |  1 | First Post       | This is the content of the first post.       |       1 |
+# |  1 | Alice Johnson | alice@example.com   | 11 | Eleventh Post    | This is the content of the eleventh post.    |       1 |
+# |  2 | Bob Smith     | bob@example.com     |  2 | Second Post      | This is the content of the second post.      |       2 |
+# |  2 | Bob Smith     | bob@example.com     | 12 | Twelfth Post     | This is the content of the twelfth post.     |       2 |
+# |  3 | Charlie Brown | charlie@example.com |  3 | Third Post       | This is the content of the third post.       |       3 |
+# |  3 | Charlie Brown | charlie@example.com | 13 | Thirteenth Post  | This is the content of the thirteenth post.  |       3 |
+# |  4 | David Wilson  | david@example.com   |  4 | Fourth Post      | This is the content of the fourth post.      |       4 |
+# |  4 | David Wilson  | david@example.com   | 14 | Fourteenth Post  | This is the content of the fourteenth post.  |       4 |
+# |  5 | Eve Davis     | eve@example.com     |  5 | Fifth Post       | This is the content of the fifth post.       |       5 |
+# |  5 | Eve Davis     | eve@example.com     | 15 | Fifteenth Post   | This is the content of the fifteenth post.   |       5 |
+# |  6 | Frank Miller  | frank@example.com   |  6 | Sixth Post       | This is the content of the sixth post.       |       6 |
+# |  6 | Frank Miller  | frank@example.com   | 16 | Sixteenth Post   | This is the content of the sixteenth post.   |       6 |
+# |  7 | Grace Lee     | grace@example.com   |  7 | Seventh Post     | This is the content of the seventh post.     |       7 |
+# |  7 | Grace Lee     | grace@example.com   | 17 | Seventeenth Post | This is the content of the seventeenth post. |       7 |
+# |  8 | Hank Moore    | hank@example.com    |  8 | Eighth Post      | This is the content of the eighth post.      |       8 |
+# |  8 | Hank Moore    | hank@example.com    | 18 | Eighteenth Post  | This is the content of the eighteenth post.  |       8 |
+# |  9 | Ivy Clark     | ivy@example.com     |  9 | Ninth Post       | This is the content of the ninth post.       |       9 |
+# |  9 | Ivy Clark     | ivy@example.com     | 19 | Nineteenth Post  | This is the content of the nineteenth post.  |       9 |
+# | 10 | Jack White    | jack@example.com    | 10 | Tenth Post       | This is the content of the tenth post.       |      10 |
+# | 10 | Jack White    | jack@example.com    | 20 | Twentieth Post   | This is the content of the twentieth post.   |      10 |
+# +----+---------------+---------------------+----+------------------+----------------------------------------------+---------+
+# 20 rows in set (0.01 sec)
+#
+# mysql> select * from user u join post p on p.user_id = u.id;
+# +----+---------------+---------------------+----+------------------+----------------------------------------------+---------+
+# | id | name          | email               | id | title            | content                                      | user_id |
+# +----+---------------+---------------------+----+------------------+----------------------------------------------+---------+
+# |  1 | Alice Johnson | alice@example.com   |  1 | First Post       | This is the content of the first post.       |       1 |
+# |  2 | Bob Smith     | bob@example.com     |  2 | Second Post      | This is the content of the second post.      |       2 |
+# |  3 | Charlie Brown | charlie@example.com |  3 | Third Post       | This is the content of the third post.       |       3 |
+# |  4 | David Wilson  | david@example.com   |  4 | Fourth Post      | This is the content of the fourth post.      |       4 |
+# |  5 | Eve Davis     | eve@example.com     |  5 | Fifth Post       | This is the content of the fifth post.       |       5 |
+# |  6 | Frank Miller  | frank@example.com   |  6 | Sixth Post       | This is the content of the sixth post.       |       6 |
+# |  7 | Grace Lee     | grace@example.com   |  7 | Seventh Post     | This is the content of the seventh post.     |       7 |
+# |  8 | Hank Moore    | hank@example.com    |  8 | Eighth Post      | This is the content of the eighth post.      |       8 |
+# |  9 | Ivy Clark     | ivy@example.com     |  9 | Ninth Post       | This is the content of the ninth post.       |       9 |
+# | 10 | Jack White    | jack@example.com    | 10 | Tenth Post       | This is the content of the tenth post.       |      10 |
+# |  1 | Alice Johnson | alice@example.com   | 11 | Eleventh Post    | This is the content of the eleventh post.    |       1 |
+# |  2 | Bob Smith     | bob@example.com     | 12 | Twelfth Post     | This is the content of the twelfth post.     |       2 |
+# |  3 | Charlie Brown | charlie@example.com | 13 | Thirteenth Post  | This is the content of the thirteenth post.  |       3 |
+# |  4 | David Wilson  | david@example.com   | 14 | Fourteenth Post  | This is the content of the fourteenth post.  |       4 |
+# |  5 | Eve Davis     | eve@example.com     | 15 | Fifteenth Post   | This is the content of the fifteenth post.   |       5 |
+# |  6 | Frank Miller  | frank@example.com   | 16 | Sixteenth Post   | This is the content of the sixteenth post.   |       6 |
+# |  7 | Grace Lee     | grace@example.com   | 17 | Seventeenth Post | This is the content of the seventeenth post. |       7 |
+# |  8 | Hank Moore    | hank@example.com    | 18 | Eighteenth Post  | This is the content of the eighteenth post.  |       8 |
+# |  9 | Ivy Clark     | ivy@example.com     | 19 | Nineteenth Post  | This is the content of the nineteenth post.  |       9 |
+# | 10 | Jack White    | jack@example.com    | 20 | Twentieth Post   | This is the content of the twentieth post.   |      10 |
+# +----+---------------+---------------------+----+------------------+----------------------------------------------+---------+
+# 20 rows in set (0.00 sec)
+
+
 mysql_initialize
 # show_databases
 # select_users
 # select_posts
+select_user_post

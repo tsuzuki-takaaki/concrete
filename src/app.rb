@@ -52,6 +52,12 @@ get '/mysql/posts' do
   json result.to_a
 end
 
+get '/mysql/user_post' do
+  # Not include post.id if you select * from JOIN TABLE
+  result = mysql_client.query("SELECT * FROM user u JOIN post p ON u.id = p.user_id;")
+  json result.to_a
+end
+
 # ---------- postgresql ----------
 get '/postgre/users' do
 end
