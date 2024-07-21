@@ -8,7 +8,8 @@ services:
       MYSQL_USER: concrete
       MYSQL_PASSWORD: password
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     volumes:
       - gem_volume:/usr/local/bundle
       - ./sql:/app/sql
@@ -28,6 +29,10 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-ppassword", "-hlocalhost"]
+      interval: 1s
+      retries: 10
 volumes:
   gem_volume:
   mysql_volume:
