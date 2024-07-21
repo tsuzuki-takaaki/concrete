@@ -54,6 +54,7 @@ end
 
 get '/mysql/user_post' do
   # Not include post.id if you select * from JOIN TABLE
+  # Because conflict with user.id(If you want include you can use AS statement)
   result = mysql_client.query("SELECT * FROM user u JOIN post p ON u.id = p.user_id;")
   json result.to_a
 end

@@ -116,9 +116,22 @@ def select_user_post
 
   result.each do |row|
     # See join table columns(Not include post.id if you select *)
+    # Because conflict with user.id(If you want include you can use AS statement)
     # @row: {"id"=>?, "name"=>?, "email"=>?, "title"=>?, "content"=>?, "user_id"=>?}
     user_post = UserPostRow.new(row)
     puts "As custom struct: #{user_post}"
+  end
+  puts "As collection array: #{result.to_a}"
+end
+
+UserPostNotAsterRow = Struct.new(:id, :name, :post_id, :title, :content)
+def select_user_post_not_aster
+  result = client.query("SELECT u.id, u.name, p.id as post_id, p.title, p.content FROM user u join post p on u.id = p.user_id")
+
+  # result depends on your select column
+  result.each do |row|
+    user_post_not_aster = UserPostNotAsterRow.new(row)
+    puts "As custom struct: #{user_post_not_aster}"
   end
   puts "As collection array: #{result.to_a}"
 end
@@ -183,4 +196,4 @@ mysql_initialize
 # show_databases
 # select_users
 # select_posts
-select_user_post
+select_user_post_not_aster
